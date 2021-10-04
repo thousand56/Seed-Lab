@@ -1,7 +1,7 @@
 //PID constants
-double kp = 2
-double ki = 5
-double kd = 1
+double kp = 2;
+double ki = 5;
+double kd = 1;
  
 unsigned long currentTime, previousTime;
 double elapsedTime;
@@ -26,7 +26,7 @@ double computePID(double inp){
         currentTime = millis();                //get current time
         elapsedTime = (double)(currentTime - previousTime);        //compute time elapsed from previous computation
         
-        error = Setpoint - inp;                                // determine error
+        error = setPoint - inp;                                // determine error
         cumError += error * elapsedTime;                // compute integral
         rateError = (error - lastError)/elapsedTime;   // compute derivative
  
