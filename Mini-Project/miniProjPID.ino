@@ -1,3 +1,11 @@
+#include <Wire.h>
+
+#define SLAVE_ADDRESS 0x04
+int number = 0;
+int state = 0;
+
+
+
 //PID constants
 double kp = 2;
 double ki = 5;
@@ -11,7 +19,15 @@ double input, output, setPoint;
 double cumError, rateError;
  
 void setup(){
-        setPoint = 0;                          //set point at zero degrees
+  pinMode(13, OUTPUT);
+  Serial.begin(9600); // start serial for output
+  // initialize i2c as slave
+  Wire.begin(SLAVE_ADDRESS);
+  // define callbacks for i2c communication
+  Wire.onReceive(receiveData);
+
+  Serial.println("Ready!");  
+  setPoint = 0;                          //set point at zero degrees
 }    
  
 void loop(){
@@ -20,6 +36,14 @@ void loop(){
         delay(100);
         analogWrite(3, output);                //control the motor based on PID value
  
+}
+
+void receiveData(int byteCount){
+  while(Wire.available()){
+    setPoint = Wire.read();
+    Serial.print("data received: ");
+    Serial.println(number);
+  }
 }
  
 double computePID(double inp){     
