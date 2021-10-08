@@ -30,9 +30,9 @@ void loop() {
   Serial.print("  ");
   Serial.println(velocity);
 
-  encoderDif = encoder0Pos - encoderLast;
-  velocity = (encoderDif*628.2)/encoderCounts;
-  encoderLast = encoder0Pos;
+  encoderDif = encoder0Pos - encoderLast;         //UNIT: encoderCounts
+  velocity = (encoderDif*628.2)/encoderCounts;    //UNIT: radians / second
+  encoderLast = encoder0Pos;                      //UNIT: encoder Position
  
   if(currentTime >= collectionTime){
     Serial.println("End of Data");
