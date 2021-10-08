@@ -98,7 +98,7 @@ void receiveData(int byteCount){
     }
     else if (piValue == 2){
       setPoint = (piValue * 200);
-
+    }
     else if (piValue == 3){
       setPoint = (piValue * 200);
     }
