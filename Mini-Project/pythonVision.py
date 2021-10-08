@@ -1,4 +1,3 @@
-#aiden holm
 import cv2 as cv
 import numpy as np
 from picamera import PiCamera
@@ -83,20 +82,26 @@ def findQuad(thresh):
     
         if(xPhi<0 and yPhi<0):
             lcd.message = "NW       "
-           
+            time.sleep(0.1)
+            writeNumber(1)
         elif(xPhi>0 and yPhi<0):
             lcd.message ="NE       "
-            
+            time.sleep(0.1)
+            writeNumber(2)
         elif (xPhi<0 and yPhi>0):
             lcd.message = "SW       "
-          
+            time.sleep(0.1)
+            writeNumber(3)
         else:
             lcd.message = "SE       "
-           
+            time.sleep(0.1)
+            writeNumber(4)
+            
             
     except ValueError:
         lcd.message = "no marker"
-    
+       
+        
 #captures and processes video, sends thresholded image to findQuad
 def videoProcess():
     cap = cv.VideoCapture(0)
@@ -138,3 +143,4 @@ def videoProcess():
     cv.destroyAllWindows()
     
 videoProcess()
+
