@@ -1,1 +1,11 @@
 This folder contains the main code for the project. Resource files to help write the code are contained in the resources folder
+#Repository for Seed Lab Projects Aiden Holm, Alex Pruitt, Akshay Mungekar, Steven Dobson
+
+The goal of this project is to have a computer vision marker location determine the rotation of a motor.
+
+Process:
+
+Computer Vision captures the frame and determines the location of the marker (NW, NE, SW, SE)
+This is passed to an LCD display and to the arduinos
+Arduinos determine the radial position the encoder must spin to
+PID controller moves motor to desired location
