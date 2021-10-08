@@ -1,3 +1,5 @@
+//This document includes the code that implements the PID controller for the motor. It can receive directions from the Pi and turn the motor to the specified point
+
 #include <Wire.h>
 
 #define SLAVE_ADDRESS 0x04
@@ -31,6 +33,7 @@ double cumError, rateError;
 
 void setup(){
 
+  //Pins used for the motor shield
   pinMode(4, OUTPUT);
   digitalWrite(4, HIGH);
 
@@ -88,6 +91,7 @@ void loop(){
 
 }
 
+//Function to read and process data from the Pi
 void receiveData(int byteCount){
   while(Wire.available()){
     piValue = Wire.read();
@@ -108,6 +112,7 @@ void receiveData(int byteCount){
   }
 }
 
+//PID calculations
 double computePID(double inp){     
         currentTime = millis();                //get current time
         elapsedTime = (double)(currentTime - previousTime);        //compute time elapsed from previous computation
