@@ -1,5 +1,5 @@
 
-// 1 ft forward is 2038 encoder counts
+// 1 ft forward is 510 encoder counts
 
 
 int number = 0;
@@ -21,6 +21,7 @@ int p = LOW;
 
 
 //PID constants
+//double kp = 0.01;
 double kp = 0.43178;
 double ki = 0.086008;
 double kd = 0;
@@ -33,6 +34,8 @@ double input, output;
 double input1, output1;
 double setPoint = 0;
 double cumError, rateError;
+
+///double kp1 = 0.2;
 
 double kp1 = 0.43178;
 double ki1 = 0.086008;
@@ -88,16 +91,54 @@ void setup() {
 
 
   Serial.println("Ready!");  
-  setPoint = 0;                          //set point at zero degrees
+  setPoint = 0; //set point at zero degrees
+  setPoint1 = 0;
 
   encoder0Pos = 0;
   encoder1Pos = 0;
-
-
+  
+  
+  setPoint = 5000;
+  setPoint1 = 5000;
+ 
 }
 
 
 void loop(){
+// created by the man the myth the legend, steven
+//  if(millis() > 5000){
+//    setPoint = 50;
+//    setPoint1 = 50;
+//  }else if(millis() > 6000){
+//    setPoint = 100;
+//    setPoint1 = 100;
+//  }else if(millis() > 7000){
+//    setPoint = 150;
+//    setPoint1 = 150;
+//  }else if(millis() > 8000){
+//    setPoint = 200;
+//    setPoint1 = 200;
+//  }else if(millis() > 9000){
+//    setPoint = 250;
+//    setPoint1 = 250;
+//  }else if(millis() > 10000){
+//    setPoint = 300;
+//    setPoint1 = 300;
+//  }else if(millis() > 11000){
+//    setPoint = 350;
+//    setPoint1 = 350;
+//  }else if(millis() > 12000){
+//    setPoint = 400;
+//    setPoint1 = 400;
+//  }
+//
+//
+//
+//
+
+
+
+  
         input = encoder0Pos;                //read from rotary encoder connected to A0
         output = -computePID(input);
         if(output < 0){
@@ -126,6 +167,8 @@ void loop(){
           digitalWrite(8, LOW);
           //digitalWrite(7, HIGH);
         }
+
+        output1 = output1*0.5;
         analogWrite(10, output1);
 
         
