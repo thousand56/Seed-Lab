@@ -48,6 +48,12 @@ double lastError1;
 double setPoint1 = 0;
 double cumError1, rateError1;
 
+double setPointOrigin;
+double setPoint1Origin;
+
+int turning = 0;
+int moveForward = 0;
+
 
 
 //int encoder0PinA = 3;
@@ -91,134 +97,182 @@ void setup() {
 
 
   Serial.println("Ready!");  
-  setPoint = 0; //set point at zero degrees
-  setPoint1 = 0;
+  
 
   encoder0Pos = 0;
   encoder1Pos = 0;
+  output = 0;
+  output1 = 0;
   
+
+  turning = 1;
+  setPointOrigin = 500;
+  setPoint1Origin = -500;
+  setPoint = setPointOrigin;
+  setPoint1 = setPoint1Origin;
   
-  setPoint = 5000;
-  setPoint1 = 5000;
- 
+
+ delay(2000);
 }
 
 
 void loop(){
-// created by the man the myth the legend, steven
-//  if(millis() > 5000){
-//    setPoint = 50;
-//    setPoint1 = 50;
-//  }else if(millis() > 6000){
-//    setPoint = 100;
-//    setPoint1 = 100;
-//  }else if(millis() > 7000){
-//    setPoint = 150;
-//    setPoint1 = 150;
-//  }else if(millis() > 8000){
-//    setPoint = 200;
-//    setPoint1 = 200;
-//  }else if(millis() > 9000){
-//    setPoint = 250;
-//    setPoint1 = 250;
-//  }else if(millis() > 10000){
-//    setPoint = 300;
-//    setPoint1 = 300;
-//  }else if(millis() > 11000){
-//    setPoint = 350;
-//    setPoint1 = 350;
-//  }else if(millis() > 12000){
-//    setPoint = 400;
-//    setPoint1 = 400;
-//  }
-//
-//
-//
-//
 
 
-
+        if (turning == 1){
+          input = encoder0Pos;                //read from rotary encoder connected to A0
+           //one PID Function
+          output = -computePID(input);
+          if(output < 0){
+            digitalWrite(7, LOW);
+          }else{
+            digitalWrite(7, HIGH);
+          }
+   
+          if (output < 0){
+            output = -output;
+          }
+          if (output > 127){
+            output = 127;
+          }
+          analogWrite(9, output);                //control the motor based on PID value
+          
   
-        input = encoder0Pos;                //read from rotary encoder connected to A0
-        output = -computePID(input);
-        if(output < 0){
-          //digitalWrite(8, HIGH);
-          digitalWrite(7, LOW);
-        }else{
-          //digitalWrite(8, LOW);
-          digitalWrite(7, HIGH);
+          input1 = encoder1Pos;                //read from rotary encoder connected to A0
+          //second PID function
+          output1 = -compute1PID(input1);
+          if(output1 < 0){
+            digitalWrite(8, HIGH);
+          }else{
+            digitalWrite(8, LOW);
+          }
+          
+          if (output1 < 0){
+            output1 = -output1;
+          }
+          if (output1 > 127){
+            output1 = 127;
+          }
+  
+          analogWrite(10, output1);
+          
+            
+  
+          if (input + input1 > 10){
+             //right motor is bigger than left motor
+             setPoint = input;
+          }
+          else if(input1+input > 10){
+            //left motor is bigger
+            setPoint1 = input1;
+          } else{
+            setPoint = setPointOrigin;
+            setPoint1 = setPoint1Origin;
+          }
+
+          if(output < 30 && output1 < 30){
+            output = 0;
+            output1 = 0;
+            encoder0Pos = 0;
+            encoder1Pos = 1;
+            turning = 0;
+            moveForward = 1;
+            setPointOrigin = 1530;
+            setPoint1Origin = 1530;
+            setPoint = setPointOrigin;
+            setPoint1 = setPoint1Origin;
+            delay(500);
+
+         
+            
+          }
+
+
+//=================================================================================================================
+        }else if (moveForward == 1){
+          input = encoder0Pos;                //read from rotary encoder connected to A0
+          //one PID Function
+          output = -computePID(input);
+          if(output < 0){
+            digitalWrite(7, LOW);
+          }else{
+            digitalWrite(7, HIGH);
+          }
+   
+          if (output < 0){
+            output = -output;
+          }
+          if (output > 127){
+            output = 127;
+          }
+          analogWrite(9, output);                //control the motor based on PID value
+          
+  
+          input1 = encoder1Pos;                //read from rotary encoder connected to A0
+          //second PID function
+          output1 = -compute1PID(input1);
+          if(output1 < 0){
+            digitalWrite(8, HIGH);
+          }else{
+            digitalWrite(8, LOW);
+          }
+          
+          if (output1 < 0){
+            output1 = -output1;
+          }
+          if (output1 > 127){
+            output1 = 127;
+          }
+  
+          analogWrite(10, output1);
+          
+            
+  
+          if (input - input1 > 10){
+             //right motor is bigger than left motor
+             setPoint = input;
+          }
+          else if(input1-input > 10){
+            //left motor is bigger
+            setPoint1 = input1;
+          } else{
+            setPoint = setPointOrigin;
+            setPoint1 = setPoint1Origin;
+          }
+
+          if(output < 30 && output1 < 30){
+            output = 0;
+            output1 = 0;
+            
+            moveForward = 0;
+            delay(1000);
+           
+          }
+
         }
-      analogWrite(9, -output);                //control the motor based on PID value
-        
 
-
-//      Serial.print(setPoint);
-//      Serial.print(" ");
-//      Serial.print(input);
-//      Serial.print(" ");
-//      Serial.println(output);
-      //  analogWrite(9,127);
-        input1 = encoder1Pos;                //read from rotary encoder connected to A0
-        output1 = -compute1PID(input1);
-        if(output1 < 0){
-          digitalWrite(8, HIGH);
-          //digitalWrite(7, LOW);
-        }else{
-          digitalWrite(8, LOW);
-          //digitalWrite(7, HIGH);
+        if(turning == 0 && moveForward ==0){
+          analogWrite(9, 0); 
+          analogWrite(10, 0);             
         }
 
-        output1 = output1*0.5;
-        analogWrite(10, output1);
 
-        
-      Serial.print(setPoint);
-      Serial.print(" ");
-      Serial.print(input1);
-      Serial.print(" ");
-      Serial.println(output1);
-      
+} //end of loop
 
 
 
 
-}
 
 //PID calculations
 double computePID(double inp){     
-        currentTime = millis();                //get current time
-        elapsedTime = (double)(currentTime - previousTime);        //compute time elapsed from previous computation
-
         error = setPoint - inp;                                // determine error
-        cumError += error * elapsedTime;                // compute integral
-        //rateError = (error - lastError)/elapsedTime;   // compute derivative
-        
-        float out = kp*error;// + ki*cumError; //+ kd*rateError;                //PID output     
-        
-                 
-
-        lastError = error;                                //remember current error
-        previousTime = currentTime;                        //remember current time
-
-        return out;                                        //have function return the PID output
+        float out = kp*error;       
+        return out;                                      
 }
-
 double compute1PID(double inp1){     
-        currentTime1 = millis();                //get current time
-        elapsedTime1 = (double)(currentTime1 - previousTime1);        //compute time elapsed from previous computation
-
-        error1 = setPoint1 - inp1;                                // determine error
-        cumError1 += error1 * elapsedTime1;                // compute integral
-        //rateError = (error - lastError)/elapsedTime;   // compute derivative
-        
-        float out1 = kp1*error1;// + ki*cumError; //+ kd*rateError;                //PID output     
-        
-                 
-
-        lastError1 = error1;                                //remember current error
-        previousTime1 = currentTime1;                        //remember current time
-
-        return out1;                                        //have function return the PID output
+        error1 = setPoint1 - inp1;                                // determine error        
+        float out1 = kp1*error1;
+        return out1;                                      
 }
 
 
@@ -235,6 +289,7 @@ void encoderISR(){
     }
   encoder0PinALast = n;
 } //end of encoderISR
+
 void encoder1ISR(){
     p = digitalRead(encoder1PinA);
     if ((encoder1PinALast == LOW) && (p == HIGH)) {
