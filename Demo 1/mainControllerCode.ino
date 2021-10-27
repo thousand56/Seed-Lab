@@ -1,6 +1,15 @@
 
-// 1 ft forward is 510 encoder counts
+// Input forward distance in feet
+double forwardFeet = 3;
+// Input turning distance in radians (left is positive)
+double turningRad = 1.57;
 
+// 1 ft forward is 510 encoder counts
+// 90 degree turn is 500 encoder counts
+
+
+int forwardEncoder;
+int turningEncoder;
 
 int number = 0;
 int piValue = 0;
@@ -61,6 +70,11 @@ int moveForward = 0;
 //int encoder1PinA = 4;
 //int encoder1PinB = 6;
 void setup() {
+
+  
+forwardEncoder = forwardFeet * 510;
+turningEncoder = turningRad * 295;
+
 //  Encoder rightEnc(LEFT_A, LEFT_B);
 //  Encoder leftEnc(RIGHT_A, RIGHT_B);
   Serial.begin(115200);
@@ -106,8 +120,8 @@ void setup() {
   
 
   turning = 1;
-  setPointOrigin = 500;
-  setPoint1Origin = -500;
+  setPointOrigin = turningEncoder;
+  setPoint1Origin = -turningEncoder;
   setPoint = setPointOrigin;
   setPoint1 = setPoint1Origin;
   
@@ -158,11 +172,11 @@ void loop(){
           
             
   
-          if (input + input1 > 10){
+          if (-input - input1 > 10){
              //right motor is bigger than left motor
              setPoint = input;
           }
-          else if(input1+input > 10){
+          else if(-input1-input > 10){
             //left motor is bigger
             setPoint1 = input1;
           } else{
@@ -177,11 +191,11 @@ void loop(){
             encoder1Pos = 1;
             turning = 0;
             moveForward = 1;
-            setPointOrigin = 1530;
-            setPoint1Origin = 1530;
+            setPointOrigin = forwardEncoder;
+            setPoint1Origin = forwardEncoder;
             setPoint = setPointOrigin;
             setPoint1 = setPoint1Origin;
-            delay(500);
+            
 
          
             
