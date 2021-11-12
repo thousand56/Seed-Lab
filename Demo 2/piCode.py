@@ -178,7 +178,8 @@ state_dictionary = {
     1 : "search",
     2 : "refineAng",
     3 : "driveForward",
-    4 : "finalStretch"
+    4 : "finalStretch",
+    5 : "refineAng2"
     }
 
 #hold, stays in there, ends the program
@@ -200,10 +201,16 @@ def state2(action):
 
     
 def state3(action):
-    if action == 4:
-        return 4
+    if action == 5:
+        return 5
     elif action == 3:
         return 3
+    
+def state5(action):
+    if action == 4:
+        return 4
+    elif action == 5:
+        return 5
 
     
 def state4(action):
@@ -221,13 +228,13 @@ while state is not None:
     
         
     if state == 0:
-        writeNumber(0)
+        #writeNumber(0)
         action = 0
         state = state0(action)
     #search
     elif state == 1:
         writeNumber(128)
-        time.sleep(5)
+        time.sleep(2)
         [blue, dist, angle] = main()
         if(blue):
             action = 2
@@ -235,6 +242,7 @@ while state is not None:
     #refine    
     elif state == 2:
         [blue, dist, angle] = main()
+        
         if(angle > 3):
             angle = angle + 100
             writeNumber(angle)
@@ -242,19 +250,36 @@ while state is not None:
             angle = -angle
             angle = angle + 175
             writeNumber(angle)
-        
+    
         time.sleep(2)
         if(abs(angle) < 3):
             action = 3
             state = state2(action)
-    
+                
     #drive forward
     elif state == 3:
         print("going forward")
         writeNumber(48)
-        time.sleep(2)
-        action = 4
+        time.sleep(5)
+        action = 5
         state = state3(action)
+        
+    #refine 2    
+    elif state == 5:
+        [blue, dist, angle] = main()
+        
+        if(angle > 4):
+            angle = angle + 100
+            writeNumber(angle)
+        elif(angle < -4):
+            angle = -angle
+            angle = angle + 175
+            writeNumber(angle)
+    
+        time.sleep(2)
+        if(abs(angle) < 4):
+            action = 4
+            state = state5(action)
         
     #final stretch
     elif state == 4:
@@ -262,18 +287,19 @@ while state is not None:
         if(dist > 30):
             print("dist is greater than 30")
             writeNumber(10)
-            time.sleep(2)
+            time.sleep(3)
         elif(dist < 20):
             print("dist less than 20")
             writeNumber(dist)
-            time.sleep(2)
+            time.sleep(3)
+            writeNumber(250)
             action = 0
             state = state4(action)
         elif(dist < 30):
             print("dist less than 30")
             dist = dist - 18
             writeNumber(dist)
-            time.sleep(2)
+            time.sleep(3)
     else:
         print("invalid state")
              
