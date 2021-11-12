@@ -235,16 +235,16 @@ while state is not None:
     #refine    
     elif state == 2:
         [blue, dist, angle] = main()
-        if(angle > 5):
+        if(angle > 3):
             angle = angle + 100
             writeNumber(angle)
-        elif(angle < -5):
+        elif(angle < -3):
             angle = -angle
             angle = angle + 175
             writeNumber(angle)
         
-        time.sleep(5)
-        if(abs(angle) < 5):
+        time.sleep(2)
+        if(abs(angle) < 3):
             action = 3
             state = state2(action)
     
@@ -252,7 +252,7 @@ while state is not None:
     elif state == 3:
         print("going forward")
         writeNumber(48)
-        time.sleep(5)
+        time.sleep(2)
         action = 4
         state = state3(action)
         
@@ -261,19 +261,19 @@ while state is not None:
         [blue, dist, angle] = main()
         if(dist > 30):
             print("dist is greater than 30")
-            writeNumber(0)
-            time.sleep(5)
+            writeNumber(10)
+            time.sleep(2)
         elif(dist < 20):
             print("dist less than 20")
-            writeNumber(0)
-            time.sleep(5)
+            writeNumber(dist)
+            time.sleep(2)
             action = 0
             state = state4(action)
         elif(dist < 30):
             print("dist less than 30")
             dist = dist - 18
-            writeNumber(7)
-            time.sleep(5)
+            writeNumber(dist)
+            time.sleep(2)
     else:
         print("invalid state")
              
